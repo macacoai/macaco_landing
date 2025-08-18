@@ -1,43 +1,4 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -47,45 +8,304 @@
     <script src="https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.20.15/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
     <div id="root"></div>
     <script type="text/babel">
         const { useState, useEffect } = React;
 
+        // Test Case Animation Component
+        const TestCaseAnimation = () => {
+            const [currentStep, setCurrentStep] = useState(0);
+            const [typedText, setTypedText] = useState('');
+            const [showTextInput, setShowTextInput] = useState(true);
+            const [showBrowser, setShowBrowser] = useState(false);
+            
+            // States for progressive typing in browser steps
+            const [step1Text, setStep1Text] = useState('');
+            const [step2Text, setStep2Text] = useState('');
+            const [step3Text, setStep3Text] = useState('');
+            const [step1Complete, setStep1Complete] = useState(false);
+            const [step2Complete, setStep2Complete] = useState(false);
+            const [step3Complete, setStep3Complete] = useState(false);
+            
+            const testText = 'Test login functionality with valid credentials...';
+            const browserSteps = [
+                'Filling username field...',
+                'Filling password field...',
+                'Clicking login button...'
+            ];
+            
+            useEffect(() => {
+                const sequence = async () => {
+                    // Reset states
+                    setShowTextInput(true);
+                    setShowBrowser(false);
+                    setTypedText('');
+                    setStep1Text('');
+                    setStep2Text('');
+                    setStep3Text('');
+                    setStep1Complete(false);
+                    setStep2Complete(false);
+                    setStep3Complete(false);
+                    
+                    // Step 1: Type main text
+                    for (let i = 0; i <= testText.length; i++) {
+                        setTypedText(testText.slice(0, i));
+                        await new Promise(resolve => setTimeout(resolve, 80));
+                    }
+                    
+                    // Step 2: Hide text input and show browser simulation
+                    setTimeout(() => {
+                        setShowTextInput(false);
+                        setShowBrowser(true);
+                    }, 500);
+                    
+                    // Step 3: Type browser steps progressively
+                    setTimeout(async () => {
+                        // Type step 1
+                        for (let i = 0; i <= browserSteps[0].length; i++) {
+                            setStep1Text(browserSteps[0].slice(0, i));
+                            await new Promise(resolve => setTimeout(resolve, 60));
+                        }
+                        setStep1Complete(true);
+                        
+                        // Wait and type step 2
+                        await new Promise(resolve => setTimeout(resolve, 300));
+                        for (let i = 0; i <= browserSteps[1].length; i++) {
+                            setStep2Text(browserSteps[1].slice(0, i));
+                            await new Promise(resolve => setTimeout(resolve, 60));
+                        }
+                        setStep2Complete(true);
+                        
+                        // Wait and type step 3
+                        await new Promise(resolve => setTimeout(resolve, 300));
+                        for (let i = 0; i <= browserSteps[2].length; i++) {
+                            setStep3Text(browserSteps[2].slice(0, i));
+                            await new Promise(resolve => setTimeout(resolve, 60));
+                        }
+                        setStep3Complete(true);
+                    }, 1000);
+                    
+                    // Reset animation - más tiempo para ver el último check
+                    setTimeout(() => {
+                        setTypedText('');
+                        setShowTextInput(true);
+                        setShowBrowser(false);
+                        setStep1Text('');
+                        setStep2Text('');
+                        setStep3Text('');
+                        setStep1Complete(false);
+                        setStep2Complete(false);
+                        setStep3Complete(false);
+                    }, 11000);
+                };
+                
+                sequence();
+                const interval = setInterval(sequence, 13000);
+                return () => clearInterval(interval);
+            }, []);
+            
+            return (
+                <div className="relative max-w-4xl mx-auto mb-12">
+                    {/* Main Animation Container with fixed height */}
+                    <div className="bg-white/10 dark:bg-black/30 backdrop-blur-sm rounded-2xl p-8 border border-white/20 dark:border-black/30 shadow-2xl h-[320px] flex flex-col justify-center">
+                        
+                        {/* Text Input Simulation */}
+                        {showTextInput && (
+                            <div className="mb-6">
+                                <div className="text-sm text-black/60 dark:text-white/60 mb-2 font-medium">✨ AI Test Case Generator</div>
+                                <div className="bg-white dark:bg-black rounded-lg p-4 border-2 border-black/20 dark:border-black/70 min-h-[60px] relative">
+                                    <span className="text-black/80 dark:text-white/80 font-mono">
+                                        {typedText}
+                                        <span className="border-r-2 border-primary animate-blink ml-1"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        )}
+                        
+                        {/* Browser Simulation */}
+                        {showBrowser && (
+                            <div className="animate-slide-in">
+                                <div className="text-sm text-black/60 dark:text-white/60 mb-2 font-medium">🌐 Playwright Execution</div>
+                                <div className="bg-black rounded-lg p-4 border border-black/70">
+                                    <div className="flex items-center mb-3">
+                                        <div className="flex space-x-2">
+                                            <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                                            <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                                            <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                                        </div>
+                                        <div className="ml-4 text-white/60 text-sm font-mono">localhost:3000/login</div>
+                                    </div>
+                                    <div className="space-y-2">
+                                        {/* Step 1 */}
+                                        <div className="bg-black/80 rounded p-3">
+                                            <div className="flex items-center justify-between">
+                                                <div className="flex items-center space-x-2">
+                                                    {!step1Complete && step1Text && (
+                                                        <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                                                    )}
+                                                    {step1Complete && (
+                                                        <div className="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
+                                                            <svg className="w-2.5 h-2.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"></path>
+                                                            </svg>
+                                                        </div>
+                                                    )}
+                                                    <span className="text-white/70 text-sm font-mono">
+                                                        {step1Text}
+                                                        {step1Text && !step1Complete && (
+                                                            <span className="border-r-2 border-blue-500 animate-blink ml-1"></span>
+                                                        )}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        {/* Step 2 */}
+                                        <div className="bg-black/80 rounded p-3">
+                                            <div className="flex items-center justify-between">
+                                                <div className="flex items-center space-x-2">
+                                                    {!step2Complete && step2Text && (
+                                                        <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                                                    )}
+                                                    {step2Complete && (
+                                                        <div className="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
+                                                            <svg className="w-2.5 h-2.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"></path>
+                                                            </svg>
+                                                        </div>
+                                                    )}
+                                                    <span className="text-white/70 text-sm font-mono">
+                                                        {step2Text}
+                                                        {step2Text && !step2Complete && (
+                                                            <span className="border-r-2 border-blue-500 animate-blink ml-1"></span>
+                                                        )}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        {/* Step 3 */}
+                                        <div className="bg-black/80 rounded p-3">
+                                            <div className="flex items-center justify-between">
+                                                <div className="flex items-center space-x-2">
+                                                    {!step3Complete && step3Text && (
+                                                        <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                                                    )}
+                                                    {step3Complete && (
+                                                        <div className="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
+                                                            <svg className="w-2.5 h-2.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"></path>
+                                                            </svg>
+                                                        </div>
+                                                    )}
+                                                    <span className="text-white/70 text-sm font-mono">
+                                                        {step3Text}
+                                                        {step3Text && !step3Complete && (
+                                                            <span className="border-r-2 border-blue-500 animate-blink ml-1"></span>
+                                                        )}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        };
+
         // Configure Tailwind CSS for dark mode
         tailwind.config = {
             darkMode: 'class',
             theme: {
-                extend: {}
+                extend: {
+                    colors: {
+                        primary: '#e6a817',
+                        'primary-light': '#f2c55c',
+                        'primary-dark': '#b8860b',
+                    },
+                    animation: {
+                        'fade-in-up': 'fadeInUp 0.8s ease-out',
+                        'fade-in': 'fadeIn 0.6s ease-out',
+                        'float': 'float 3s ease-in-out infinite',
+                        'typing': 'typing 3s steps(40, end) infinite',
+                        'blink': 'blink 1s infinite',
+                        'slide-in': 'slideIn 0.5s ease-out',
+                        'check-mark': 'checkMark 0.6s ease-out',
+                        'notification': 'notification 0.8s ease-out',
+                    },
+                    keyframes: {
+                        typing: {
+                            '0%': { width: '0' },
+                            '50%': { width: '100%' },
+                            '100%': { width: '100%' }
+                        },
+                        blink: {
+                            '0%, 50%': { borderColor: 'transparent' },
+                            '51%, 100%': { borderColor: '#f59e0b' }
+                        },
+                        slideIn: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' }
+                        },
+                        checkMark: {
+                            '0%': { transform: 'scale(0)', opacity: '0' },
+                            '50%': { transform: 'scale(1.2)', opacity: '1' },
+                            '100%': { transform: 'scale(1)', opacity: '1' }
+                        },
+                        notification: {
+                            '0%': { transform: 'translateX(100%)', opacity: '0' },
+                            '20%': { transform: 'translateX(0)', opacity: '1' },
+                            '80%': { transform: 'translateX(0)', opacity: '1' },
+                            '100%': { transform: 'translateX(100%)', opacity: '0' }
+                        }
+                    }
+                }
             }
         };
 
         const Navbar = ({ toggleDarkMode, isDarkMode }) => {
             const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+            const [isScrolled, setIsScrolled] = useState(false);
+            
+            useEffect(() => {
+                const handleScroll = () => {
+                    setIsScrolled(window.scrollY > 20);
+                };
+                window.addEventListener('scroll', handleScroll);
+                return () => window.removeEventListener('scroll', handleScroll);
+            }, []);
             
             return (
-                <nav className="bg-white dark:bg-gray-900 shadow-lg fixed w-full z-20 transition-all duration-300">
+                <nav className={`fixed w-full z-50 transition-all duration-300 ${
+                    isScrolled 
+                        ? 'bg-white/80 dark:bg-black/80 backdrop-blur-md shadow-lg border-b border-black/20 dark:border-black/20' 
+                        : 'bg-transparent'
+                }`}>
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
                         <div className="flex items-center">
-                            <img src="logo.png" alt="Macaco logo" className="h-10 w-10" />
-                            <span className="text-2xl font-bold text-gray-900 dark:text-white ml-3 tracking-tight">Macaco</span>
+                            <img src="static/logo.png" alt="Macaco Logo" className="w-10 h-10 rounded-xl" />
+                            <span className="text-2xl font-bold text-black dark:text-white ml-3 tracking-tight">Macaco</span>
                         </div>
                         
                         {/* Desktop Navigation */}
-                        <div className="hidden md:flex items-center space-x-6">
-                            <a href="#features" className="text-gray-700 dark:text-gray-200 hover:text-amber-600 dark:hover:text-amber-400 font-medium transition-colors">Features</a>
-                            <a href="#how-it-works" className="text-gray-700 dark:text-gray-200 hover:text-amber-600 dark:hover:text-amber-400 font-medium transition-colors">How it Works</a>
-                            <a href="#benefits" className="text-gray-700 dark:text-gray-200 hover:text-amber-600 dark:hover:text-amber-400 font-medium transition-colors">Benefits</a>
-                            <a href="#get-started" className="bg-amber-600 text-white px-5 py-2 rounded-full font-semibold hover:bg-amber-700 dark:hover:bg-amber-500 transition-all transform hover:scale-105">Get Started</a>
-                            <button onClick={toggleDarkMode} className="text-gray-700 dark:text-gray-200 hover:text-amber-600 dark:hover:text-amber-400 transition-colors">
+                        <div className="hidden md:flex items-center space-x-8">
+                            <a href="#features" className="text-black/70 dark:text-white/80 hover:text-primary dark:hover:text-primary font-medium transition-colors duration-200">Features</a>
+                            <a href="#how-it-works" className="text-black/70 dark:text-white/80 hover:text-primary dark:hover:text-primary font-medium transition-colors duration-200">How it Works</a>
+                            <a href="#benefits" className="text-black/70 dark:text-white/80 hover:text-primary dark:hover:text-primary font-medium transition-colors duration-200">Benefits</a>
+                            <a href="#get-started" className="bg-gradient-to-r from-primary to-primary-dark text-white px-6 py-2.5 rounded-full font-semibold hover:shadow-lg hover:scale-105 transition-all duration-200">Join Free Beta</a>
+                            <button onClick={toggleDarkMode} className="p-2 rounded-full hover:bg-black/10 dark:hover:bg-black/80 transition-colors duration-200">
                                 {isDarkMode ? (
-                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <svg className="w-5 h-5 text-black/70 dark:text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
                                     </svg>
                                 ) : (
-                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <svg className="w-5 h-5 text-black/70 dark:text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
                                     </svg>
                                 )}
@@ -94,27 +314,27 @@
                         
                         {/* Mobile menu button */}
                         <div className="md:hidden flex items-center space-x-4">
-                            <button onClick={toggleDarkMode} className="text-gray-700 dark:text-gray-200 hover:text-amber-600 dark:hover:text-amber-400 transition-colors">
+                            <button onClick={toggleDarkMode} className="p-2 rounded-full hover:bg-black/10 dark:hover:bg-black/80 transition-colors duration-200">
                                 {isDarkMode ? (
-                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <svg className="w-5 h-5 text-black/70 dark:text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
                                     </svg>
                                 ) : (
-                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <svg className="w-5 h-5 text-black/70 dark:text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
                                     </svg>
                                 )}
                             </button>
                             <button 
                                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                                className="text-gray-700 dark:text-gray-200 hover:text-amber-600 dark:hover:text-amber-400 transition-colors"
+                                className="p-2 rounded-full hover:bg-black/10 dark:hover:bg-black/80 transition-colors duration-200"
                             >
                                 {isMobileMenuOpen ? (
-                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <svg className="w-6 h-6 text-black/70 dark:text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
                                     </svg>
                                 ) : (
-                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <svg className="w-6 h-6 text-black/70 dark:text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path>
                                     </svg>
                                 )}
@@ -124,35 +344,35 @@
                     
                     {/* Mobile Navigation Menu */}
                     {isMobileMenuOpen && (
-                        <div className="md:hidden bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700">
+                        <div className="md:hidden bg-white/95 dark:bg-black/95 backdrop-blur-md border-t border-black/20 dark:border-black/20">
                             <div className="px-4 py-6 space-y-4">
                                 <a 
                                     href="#features" 
-                                    className="block text-gray-700 dark:text-gray-200 hover:text-amber-600 dark:hover:text-amber-400 font-medium transition-colors py-2"
+                                    className="block text-black/70 dark:text-white/80 hover:text-primary dark:hover:text-primary font-medium transition-colors py-2"
                                     onClick={() => setIsMobileMenuOpen(false)}
                                 >
                                     Features
                                 </a>
                                 <a 
                                     href="#how-it-works" 
-                                    className="block text-gray-700 dark:text-gray-200 hover:text-amber-600 dark:hover:text-amber-400 font-medium transition-colors py-2"
+                                    className="block text-black/70 dark:text-white/80 hover:text-primary dark:hover:text-primary font-medium transition-colors py-2"
                                     onClick={() => setIsMobileMenuOpen(false)}
                                 >
                                     How it Works
                                 </a>
                                 <a 
                                     href="#benefits" 
-                                    className="block text-gray-700 dark:text-gray-200 hover:text-amber-600 dark:hover:text-amber-400 font-medium transition-colors py-2"
+                                    className="block text-black/70 dark:text-white/80 hover:text-primary dark:hover:text-primary font-medium transition-colors py-2"
                                     onClick={() => setIsMobileMenuOpen(false)}
                                 >
                                     Benefits
                                 </a>
                                 <a 
                                     href="#get-started" 
-                                    className="block bg-amber-600 text-white px-5 py-3 rounded-full font-semibold hover:bg-amber-700 dark:hover:bg-amber-500 transition-all text-center"
+                                    className="block bg-gradient-to-r from-primary to-primary-dark text-white px-6 py-3 rounded-full font-semibold text-center transition-all"
                                     onClick={() => setIsMobileMenuOpen(false)}
                                 >
-                                    Get Started
+                                    Join Free Beta
                                 </a>
                             </div>
                         </div>
@@ -162,40 +382,116 @@
         };
 
         const Hero = () => (
-            <section className="bg-gradient-to-br from-amber-600 via-orange-500 to-amber-700 text-white pt-32 pb-24">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                    <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-6 animate-slide-up tracking-tight">
-                        Intelligent QA Testing Assistant
-                    </h1>
-                    <p className="text-lg sm:text-xl max-w-3xl mx-auto mb-10 font-light leading-relaxed opacity-90">
-                        Macaco automates test case design from Jira tasks, executes them with Playwright MCP, and enables intelligent exploratory testing—all locally with full privacy.
-                    </p>
-                    <div className="flex justify-center space-x-6">
-                        <a href="#get-started" className="bg-white text-amber-600 dark:bg-gray-800 dark:text-amber-300 px-8 py-3 rounded-full font-semibold text-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all transform hover:scale-105 shadow-lg">Start Testing Smarter</a>
-                        <a href="#demo" className="border-2 border-white text-white px-8 py-3 rounded-full font-semibold text-lg hover:bg-white hover:text-amber-600 dark:hover:bg-gray-800 dark:hover:text-amber-300 transition-all transform hover:scale-105">Watch Demo</a>
+            <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-black/5 via-white to-black/10 dark:from-black dark:via-black/80 dark:to-black">
+                {/* Background Pattern */}
+                <div className="absolute inset-0 opacity-5 dark:opacity-10">
+                    <div className="absolute inset-0" style={{
+                        backgroundImage: `radial-gradient(circle at 25px 25px, #f59e0b 2px, transparent 0)`,
+                        backgroundSize: '50px 50px'
+                    }}></div>
+                </div>
+                
+                {/* Floating Elements */}
+                <div className="absolute top-20 left-10 w-20 h-20 bg-primary/10 rounded-full animate-float"></div>
+                <div className="absolute top-40 right-20 w-16 h-16 bg-primary/20 rounded-full animate-float" style={{animationDelay: '1s'}}></div>
+                <div className="absolute bottom-40 left-20 w-12 h-12 bg-primary/15 rounded-full animate-float" style={{animationDelay: '2s'}}></div>
+                
+                <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center pt-20">
+                    <div className="animate-fade-in-up">
+                        {/* Free Beta Badge */}
+                        <div className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-500/10 to-primary/10 dark:from-green-400/20 dark:to-primary/20 rounded-full text-green-600 dark:text-green-400 text-sm font-semibold mb-4 border border-green-200/50 dark:border-green-400/30">
+                            <span className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></span>
+                            🎉 FREE BETA ACCESS - Limited Time
+                        </div>
+                        
+                        
+                        <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold mb-8 tracking-tight">
+                            <span className="bg-gradient-to-r from-black via-black/80 to-black dark:from-white dark:via-white/90 dark:to-white bg-clip-text text-transparent">
+                                Intelligent QA
+                            </span>
+                            <br />
+                            <span className="bg-gradient-to-r from-primary via-primary-light to-primary-dark bg-clip-text text-transparent">
+                                Testing Assistant
+                            </span>
+                        </h1>
+                        
+                        <p className="text-xl sm:text-2xl max-w-4xl mx-auto mb-12 text-black/60 dark:text-white/80 leading-relaxed font-light">
+                            Macaco automates test case design from <span className="text-primary font-medium">project requirements</span>, executes them with <span className="text-primary font-medium">Playwright</span>, and enables intelligent exploratory testing—all locally with <span className="text-primary font-medium">complete privacy</span>. <span className="text-sm text-black/50 dark:text-white/60">(Jira integration coming soon)</span>
+                        </p>
+                        
+                        {/* Test Case Animation */}
+                        <TestCaseAnimation />
+                        
+                        <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6 mb-16">
+                            <a href="#get-started" className="group bg-gradient-to-r from-primary to-primary-dark text-white px-8 py-4 rounded-2xl font-semibold text-lg hover:shadow-2xl hover:shadow-primary/25 transition-all duration-300 transform hover:scale-105 flex items-center justify-center">
+                                Join Free Beta Now
+                                <svg className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                                </svg>
+                            </a>
+                            <a href="#demo" className="group border-2 border-black/30 dark:border-black/60 text-black/70 dark:text-white/80 px-8 py-4 rounded-2xl font-semibold text-lg hover:border-primary hover:text-primary dark:hover:text-primary transition-all duration-300 transform hover:scale-105 flex items-center justify-center">
+                                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                Watch Demo
+                            </a>
+                        </div>
+                        
+                        {/* Trust Indicators */}
+                        <div className="flex flex-wrap justify-center items-center gap-8 text-sm text-black/50 dark:text-white/60">
+                            <div className="flex items-center">
+                                <svg className="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path>
+                                </svg>
+                                100% Local Execution
+                            </div>
+                            <div className="flex items-center">
+                                <svg className="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path>
+                                </svg>
+                                Zero Data Storage
+                            </div>
+                            <div className="flex items-center">
+                                <svg className="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path>
+                                </svg>
+                                VPN Compatible
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
         );
 
         const DemoVideo = () => (
-            <section id="demo" className="py-20 bg-white dark:bg-gray-800">
+            <section id="demo" className="py-24 bg-white dark:bg-black/80">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <h2 className="text-3xl sm:text-4xl font-extrabold text-center text-gray-900 dark:text-white mb-12 animate-slide-up tracking-tight">See Macaco in Action</h2>
+                    <div className="text-center mb-16 animate-fade-in-up">
+                        <h2 className="text-4xl sm:text-5xl font-bold text-black dark:text-white mb-6 tracking-tight">
+                            See Macaco in Action
+                        </h2>
+                        <p className="text-xl text-black/60 dark:text-white/80 max-w-3xl mx-auto">
+                            Watch how Macaco transforms your QA testing workflow from manual to intelligent automation
+                        </p>
+                    </div>
+                    
                     <div className="flex justify-center">
-                        <div className="w-full max-w-4xl">
-                            <div className="relative overflow-hidden rounded-2xl shadow-xl">
-                                <iframe
-                                    className="w-full h-64 sm:h-96"
-                                    src="https://www.youtube.com/embed/sample-video" // Placeholder video URL
-                                    title="Macaco Demo Video"
-                                    frameBorder="0"
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                    allowFullScreen
-                                ></iframe>
+                        <div className="w-full max-w-5xl">
+                            <div className="relative group">
+                                <div className="absolute -inset-4 bg-gradient-to-r from-primary/20 to-primary-dark/20 rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-300"></div>
+                                <div className="relative overflow-hidden rounded-2xl shadow-2xl bg-black">
+                                    <iframe
+                                        className="w-full h-64 sm:h-96 lg:h-[500px]"
+                                        src="https://www.youtube.com/embed/sample-video"
+                                        title="Macaco Demo Video"
+                                        frameBorder="0"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        allowFullScreen
+                                    ></iframe>
+                                </div>
                             </div>
-                            <p className="text-center text-gray-600 dark:text-gray-300 mt-6 text-lg font-light">
-                                Discover how Macaco streamlines your QA testing process with this short demo.
+                            <p className="text-center text-black/60 dark:text-white/80 mt-8 text-lg">
+                                Watch how teams reduce testing time by 80% with intelligent automation
                             </p>
                         </div>
                     </div>
@@ -203,48 +499,67 @@
             </section>
         );
 
-        const FeatureCard = ({ emoji, title, description }) => (
-            <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-2 duration-300">
-                <span className="text-4xl mb-4 block">{emoji}</span>
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 tracking-tight">{title}</h3>
-                <p className="text-gray-600 dark:text-gray-300 leading-relaxed">{description}</p>
+        const FeatureCard = ({ icon, title, description, gradient }) => (
+            <div className="group relative">
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/20 to-primary-dark/20 rounded-2xl blur opacity-0 group-hover:opacity-100 transition duration-300"></div>
+                <div className="relative bg-white dark:bg-black/80 p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-black/10 dark:border-black/70">
+                    <div className={`w-14 h-14 ${gradient} rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
+                        {icon}
+                    </div>
+                    <h3 className="text-xl font-bold text-black dark:text-white mb-4 tracking-tight">{title}</h3>
+                    <p className="text-black/60 dark:text-white/80 leading-relaxed">{description}</p>
+                </div>
             </div>
         );
 
         const Features = () => (
-            <section id="features" className="py-20 bg-gray-100 dark:bg-gray-900">
+            <section id="features" className="py-24 bg-black/5 dark:bg-black">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <h2 className="text-3xl sm:text-4xl font-extrabold text-center text-gray-900 dark:text-white mb-16 animate-slide-up tracking-tight">Powerful Features for Modern Teams</h2>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div className="text-center mb-20 animate-fade-in-up">
+                        <h2 className="text-4xl sm:text-5xl font-bold text-black dark:text-white mb-6 tracking-tight">
+                            Powerful Features for Modern Teams
+                        </h2>
+                        <p className="text-xl text-black/60 dark:text-white/80 max-w-3xl mx-auto">
+                            Everything you need to transform your QA testing process with AI-powered automation
+                        </p>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         <FeatureCard
-                            emoji="🎯"
+                            icon={<svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>}
+                            gradient="bg-gradient-to-br from-green-500 to-green-600"
                             title="Smart Test Case Generation"
-                            description="Automatically creates comprehensive test cases from Jira tasks using AI, saving hours and ensuring full coverage."
+                            description="Automatically creates comprehensive test cases from project requirements using AI, saving hours of edge cases and scenarios."
                         />
                         <FeatureCard
-                            emoji="🔍"
+                            icon={<svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>}
+                            gradient="bg-gradient-to-br from-blue-500 to-blue-600"
                             title="Exploratory Testing"
-                            description="AI-powered testing navigates your app to uncover edge cases, usability issues, and unexpected behaviors."
+                            description="AI-powered testing navigates your application intelligently to uncover edge cases, usability issues, and unexpected behaviors automatically."
                         />
                         <FeatureCard
-                            emoji="🚀"
+                            icon={<svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>}
+                            gradient="bg-gradient-to-br from-purple-500 to-purple-600"
                             title="Playwright Integration"
-                            description="Seamlessly executes tests with Playwright MCP for fast, reliable, cross-browser automation with detailed reports."
+                            description="Seamlessly executes tests with Playwright for fast, reliable, cross-browser automation with detailed reports and screenshots."
                         />
                         <FeatureCard
-                            emoji="🔗"
-                            title="Jira Synchronization"
-                            description="Direct Jira integration keeps test cases in sync with requirements and updates test status automatically."
+                            icon={<svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg>}
+                            gradient="bg-gradient-to-br from-orange-500 to-orange-600"
+                            title="Project Synchronization"
+                            description="Direct integration with project management tools to keep test cases in sync with requirements."
                         />
                         <FeatureCard
-                            emoji="📊"
+                            icon={<svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>}
+                            gradient="bg-gradient-to-br from-indigo-500 to-indigo-600"
                             title="Intelligent Analytics"
-                            description="Gain insights into test coverage, success rates, and productivity with beautiful dashboards and metrics."
+                            description="Gain insights into test coverage, success rates, and team productivity with beautiful dashboards and comprehensive metrics."
                         />
                         <FeatureCard
-                            emoji="🔒"
+                            icon={<svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>}
+                            gradient="bg-gradient-to-br from-red-500 to-red-600"
                             title="Local & Secure Execution"
-                            description="Tests run locally with VPN support, ensuring zero sensitive data storage for complete privacy."
+                            description="Tests run locally with VPN support, ensuring zero sensitive data storage and complete privacy for your organization."
                         />
                     </div>
                 </div>
@@ -252,82 +567,232 @@
         );
 
         const HowItWorks = () => (
-            <section id="how-it-works" className="py-20 bg-white dark:bg-gray-800">
+            <section id="how-it-works" className="py-24 bg-white dark:bg-black/80">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <h2 className="text-3xl sm:text-4xl font-extrabold text-center text-gray-900 dark:text-white mb-16 animate-slide-up tracking-tight">How Macaco Works</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+                    <div className="text-center mb-20 animate-fade-in-up">
+                        <h2 className="text-4xl sm:text-5xl font-bold text-black dark:text-white mb-6 tracking-tight">
+                            How Macaco Works
+                        </h2>
+                        <p className="text-xl text-black/60 dark:text-white/80 max-w-3xl mx-auto">
+                            Three simple steps to transform your QA testing process
+                        </p>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-16">
                         <div className="text-center group">
-                            <div className="bg-amber-600 text-white rounded-full w-14 h-14 flex items-center justify-center mx-auto mb-6 text-xl font-bold group-hover:scale-110 transition-transform">1</div>
-                            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">Connect Your Jira</h3>
-                            <p className="text-gray-600 dark:text-gray-300 leading-relaxed">Integrate Macaco with your Jira workspace. Our smart parser analyzes task descriptions.</p>
+                            <div className="relative mb-8">
+                                <div className="w-20 h-20 bg-gradient-to-br from-primary to-primary-dark rounded-3xl flex items-center justify-center mx-auto group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                                    <span className="text-white font-bold text-2xl">1</span>
+                                </div>
+                                <div className="absolute -top-2 -right-2 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                                    <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <h3 className="text-2xl font-bold text-black dark:text-white mb-4">Input Project Requirements</h3>
+                            <p className="text-black/60 dark:text-white/80 leading-relaxed text-lg">
+                                Provide your project requirements and task descriptions. Our intelligent parser analyzes requirements automatically. <span className="text-sm text-primary font-medium">(Jira integration coming soon)</span>
+                            </p>
                         </div>
+                        
                         <div className="text-center group">
-                            <div className="bg-amber-600 text-white rounded-full w-14 h-14 flex items-center justify-center mx-auto mb-6 text-xl font-bold group-hover:scale-110 transition-transform">2</div>
-                            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">AI Generates Test Cases</h3>
-                            <p className="text-gray-600 dark:text-gray-300 leading-relaxed">Our AI creates comprehensive test cases from Jira tasks, covering edge cases and scenarios.</p>
+                            <div className="relative mb-8">
+                                <div className="w-20 h-20 bg-gradient-to-br from-primary to-primary-dark rounded-3xl flex items-center justify-center mx-auto group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                                    <span className="text-white font-bold text-2xl">2</span>
+                                </div>
+                                <div className="absolute -top-2 -right-2 w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
+                                    <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <h3 className="text-2xl font-bold text-black dark:text-white mb-4">AI Generates Test Cases</h3>
+                            <p className="text-black/60 dark:text-white/80 leading-relaxed">
+                                    Our advanced AI creates comprehensive test cases from project requirements, covering edge cases, user scenarios, and validation rules.
+                                </p>
                         </div>
+                        
                         <div className="text-center group">
-                            <div className="bg-amber-600 text-white rounded-full w-14 h-14 flex items-center justify-center mx-auto mb-6 text-xl font-bold group-hover:scale-110 transition-transform">3</div>
-                            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">Automated & Exploratory Testing</h3>
-                            <p className="text-gray-600 dark:text-gray-300 leading-relaxed">Playwright MCP runs tests while AI explores your app, delivering comprehensive reports.</p>
+                            <div className="relative mb-8">
+                                <div className="w-20 h-20 bg-gradient-to-br from-primary to-primary-dark rounded-3xl flex items-center justify-center mx-auto group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                                    <span className="text-white font-bold text-2xl">3</span>
+                                </div>
+                                <div className="absolute -top-2 -right-2 w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center">
+                                    <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <h3 className="text-2xl font-bold text-black dark:text-white mb-4">Automated & Exploratory Testing</h3>
+                            <p className="text-black/60 dark:text-white/80 leading-relaxed text-lg">
+                                Playwright executes tests while AI explores your application, delivering comprehensive reports with actionable insights.
+                            </p>
                         </div>
                     </div>
                 </div>
             </section>
         );
 
+        const BenefitCard = ({ title, description, metric }) => (
+            <div className="group relative">
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/20 to-primary-dark/20 rounded-2xl blur opacity-0 group-hover:opacity-100 transition duration-300"></div>
+                <div className="relative bg-white dark:bg-black/80 p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-black/10 dark:border-black/70">
+                    {metric && (
+                        <div className="text-3xl font-bold text-primary mb-2">{metric}</div>
+                    )}
+                    <h3 className="text-xl font-bold text-black dark:text-white mb-3">{title}</h3>
+                    <p className="text-black/60 dark:text-white/80 leading-relaxed">{description}</p>
+                </div>
+            </div>
+        );
+
         const Benefits = () => (
-            <section id="benefits" className="py-20 bg-gray-100 dark:bg-gray-900">
+            <section id="benefits" className="py-24 bg-black/5 dark:bg-black">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <h2 className="text-3xl sm:text-4xl font-extrabold text-center text-gray-900 dark:text-white mb-16 animate-slide-up tracking-tight">Why Choose Macaco?</h2>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                        <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-2 duration-300">
-                            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">Comprehensive Coverage</h3>
-                            <p className="text-gray-600 dark:text-gray-300 leading-relaxed">Structured and exploratory testing for complete quality assurance.</p>
-                        </div>
-                        <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-2 duration-300">
-                            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">80% Faster Test Creation</h3>
-                            <p className="text-gray-600 dark:text-gray-300 leading-relaxed">AI-powered generation reduces manual test case writing time.</p>
-                        </div>
-                        <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-2 duration-300">
-                            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb3">Real-time Insights</h3>
-                            <p className="text-gray-600 dark:text-gray-300 leading-relaxed">Instant feedback on test results and quality metrics.</p>
-                        </div>
+                    <div className="text-center mb-20 animate-fade-in-up">
+                        <h2 className="text-4xl sm:text-5xl font-bold text-black dark:text-white mb-6 tracking-tight">
+                            Why Choose Macaco?
+                        </h2>
+                        <p className="text-xl text-black/60 dark:text-white/80 max-w-3xl mx-auto">
+                            Join hundreds of teams already transforming their QA processes
+                        </p>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <BenefitCard
+                            metric="100%"
+                            title="Privacy Guaranteed"
+                            description="All testing runs locally. Your sensitive data never leaves your environment."
+                        />
+
+                        <BenefitCard
+                            metric="80%"
+                            title="Faster Test Creation"
+                            description="AI generation dramatically reduces manual test case writing time."
+                        />
+                        <BenefitCard
+                            metric="0"
+                            title="Zero Learning Curve"
+                            description="Intuitive interface designed for QA teams. Start testing smarter in minutes, not weeks."
+                        />
+                        <BenefitCard
+                            title="Real-time Insights"
+                            description="Instant feedback on test results, quality metrics, and team productivity with beautiful, actionable dashboards."
+                        />
+                        <BenefitCard
+                            title="Comprehensive Coverage"
+                            description="Structured and exploratory testing combined assurance across all user scenarios and edge cases."
+                        />
+
+
+                        <BenefitCard
+                            title="Seamless Integration"
+                            description="Works with your existing workflow and testing tools without disrupting current processes."
+                        />
                     </div>
                 </div>
             </section>
         );
 
         const CTA = () => (
-            <section id="get-started" className="py-20 bg-gradient-to-br from-amber-600 via-orange-500 to-amber-700 text-white">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                    <h2 className="text-3xl sm:text-4xl font-extrabold mb-6 animate-slide-up tracking-tight">Ready to Transform Your Testing?</h2>
-                    <p className="text-lg sm:text-xl max-w-3xl mx-auto mb-10 font-light leading-relaxed opacity-90">
-                        Join hundreds of teams using Macaco to streamline testing and deliver better software faster.
-                    </p>
-                    <div className="flex justify-center space-x-6">
-                        <a href="#download-windows" className="bg-white text-amber-600 dark:bg-gray-800 dark:text-amber-300 px-8 py-3 rounded-full font-semibold text-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all transform hover:scale-105 shadow-lg flex items-center">
-                             <svg className="w-6 h-6 mr-2" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                                 <path d="M3 4.5l8-1.2v8.2H3V4.5zm9-1.4l9-1.3v10.9h-9V3.1zM3 13.5h8v8.2l-8-1.2v-7zM12 13.5h9v10.9l-9-1.3v-9.6z"/>
-                             </svg>
-                             Download for Windows
-                         </a>
-                        <a href="#download-mac" className="bg-white text-amber-600 dark:bg-gray-800 dark:text-amber-300 px-8 py-3 rounded-full font-semibold text-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all transform hover:scale-105 shadow-lg flex items-center">
-                             <svg className="w-6 h-6 mr-2" viewBox="0 0 512 512" fill="currentColor" aria-hidden="true">
-                                  <path d="M349.13,136.86c-40.32,0-57.36,19.24-85.44,19.24C234.9,156.1,212.94,137,178,137c-34.2,0-70.67,20.88-93.83,56.45-32.52,50.16-27,144.63,25.67,225.11,18.84,28.81,44,61.12,77,61.47h.6c28.68,0,37.2-18.78,76.67-19h.6c38.88,0,46.68,18.89,75.24,18.89h.6c33-.35,59.51-36.15,78.35-64.85,13.56-20.64,18.6-31,29-54.35-76.19-28.92-88.43-136.93-13.08-178.34-23-28.8-55.32-45.48-85.79-45.48Z"/>
-                                  <path d="M340.25,32c-24,1.63-52,16.91-68.4,36.86-14.88,18.08-27.12,44.9-22.32,70.91h1.92c25.56,0,51.72-15.39,67-35.11C333.17,85.89,344.33,59.29,340.25,32Z"/>
-                             </svg>
-                             Download for Mac
-                         </a>
+            <section id="get-started" className="py-24 bg-gradient-to-br from-primary via-primary-light to-primary-dark text-white relative overflow-hidden">
+                {/* Background Pattern */}
+                <div className="absolute inset-0 opacity-10">
+                    <div className="absolute inset-0" style={{
+                        backgroundImage: `radial-gradient(circle at 25px 25px, white 2px, transparent 0)`,
+                        backgroundSize: '50px 50px'
+                    }}></div>
+                </div>
+                
+                <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                    <div className="animate-fade-in-up">
+                        <h2 className="text-4xl sm:text-5xl font-bold mb-6 tracking-tight">
+                            Ready to Transform Your Testing?
+                        </h2>
+                        <p className="text-xl sm:text-2xl max-w-4xl mx-auto mb-8 font-light leading-relaxed opacity-90">
+                            Join the free beta and be among the first to experience the future of QA testing.
+                        </p>
+                        
+                        {/* Beta Access Highlight */}
+                        <div className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-500/10 to-primary/10 dark:from-green-400/20 dark:to-primary/20 rounded-full text-green-600 dark:text-green-400 text-lg font-semibold mb-12 border border-green-200/50 dark:border-green-400/30">
+                            <span className="w-3 h-3 bg-green-500 rounded-full mr-3 animate-pulse"></span>
+                            🚀 Free Beta - No Payment Required
+                        </div>
+                        
+                        <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6 mb-12">
+                            <a href="#download-windows" className="group bg-white text-black px-8 py-4 rounded-2xl font-semibold text-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105 flex items-center justify-center">
+                                <svg className="w-6 h-6 mr-3" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M3 4.5l8-1.2v8.2H3V4.5zm9-1.4l9-1.3v10.9h-9V3.1zM3 13.5h8v8.2l-8-1.2v-7zM12 13.5h9v10.9l-9-1.3v-9.6z"/>
+                                </svg>
+                                Download Beta - Windows
+                                <svg className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                                </svg>
+                            </a>
+                            <a href="#download-mac" className="group bg-white text-black px-8 py-4 rounded-2xl font-semibold text-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105 flex items-center justify-center">
+                                <svg className="w-6 h-6 mr-3" viewBox="0 0 512 512" fill="currentColor">
+                                    <path d="M349.13,136.86c-40.32,0-57.36,19.24-85.44,19.24C234.9,156.1,212.94,137,178,137c-34.2,0-70.67,20.88-93.83,56.45-32.52,50.16-27,144.63,25.67,225.11,18.84,28.81,44,61.12,77,61.47h.6c28.68,0,37.2-18.78,76.67-19h.6c38.88,0,46.68,18.89,75.24,18.89h.6c33-.35,59.51-36.15,78.35-64.85,13.56-20.64,18.6-31,29-54.35-76.19-28.92-88.43-136.93-13.08-178.34-23-28.8-55.32-45.48-85.79-45.48Z"/>
+                                    <path d="M340.25,32c-24,1.63-52,16.91-68.4,36.86-14.88,18.08-27.12,44.9-22.32,70.91h1.92c25.56,0,51.72-15.39,67-35.11C333.17,85.89,344.33,59.29,340.25,32Z"/>
+                                </svg>
+                                Download Beta - Mac
+                                <svg className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                                </svg>
+                            </a>
+                        </div>
+                        
+                        <div className="flex flex-wrap justify-center items-center gap-8 text-sm opacity-80">
+                            <div className="flex items-center">
+                                <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path>
+                                </svg>
+                                Free Beta Access
+                            </div>
+                            <div className="flex items-center">
+                                <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path>
+                                </svg>
+                                No credit card required
+                            </div>
+                            <div className="flex items-center">
+                                <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path>
+                                </svg>
+                                Setup in 5 minutes
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
         );
 
         const Footer = () => (
-            <footer className="bg-gray-900 dark:bg-gray-950 text-white py-10">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                    <p className="text-sm opacity-80">© 2025 Macaco. Intelligent QA Testing Assistant. All rights reserved.</p>
+            <footer className="bg-black dark:bg-black text-white py-12">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+                        {/* Logo and Brand */}
+                        <div className="flex items-center justify-center md:justify-start">
+                            <img src="static/logo.png" alt="Macaco Logo" className="w-8 h-8 rounded-lg mr-3" />
+                            <span className="text-xl font-bold">Macaco</span>
+                        </div>
+                        
+                        {/* Legal Links */}
+                        <div className="flex justify-center space-x-6">
+                            <a href="terms.html" className="text-white/60 hover:text-primary transition-colors duration-200 text-sm">
+                                Terms of Service
+                            </a>
+                            <a href="privacy.html" className="text-white/60 hover:text-primary transition-colors duration-200 text-sm">
+                                Privacy Policy
+                            </a>
+                        </div>
+                        
+                        {/* Copyright */}
+                        <p className="text-sm text-white/60 text-center md:text-right">
+                            © 2025 Macaco. Intelligent QA Testing Assistant.<br />
+                            All rights reserved.
+                        </p>
+                    </div>
                 </div>
             </footer>
         );
@@ -369,12 +834,66 @@
         body {
             font-family: 'Inter', sans-serif;
         }
-        .animate-slide-up {
-            animation: slideUp 1s ease-out;
+        
+        .animate-fade-in-up {
+            animation: fadeInUp 0.8s ease-out;
         }
-        @keyframes slideUp {
-            0% { opacity: 0; transform: translateY(30px); }
-            100% { opacity: 1; transform: translateY(0); }
+        
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+        
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes fadeInUp {
+            0% { 
+                opacity: 0; 
+                transform: translateY(30px); 
+            }
+            100% { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+        
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #f59e0b;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #d97706;
+        }
+        
+        /* Dark mode scrollbar */
+        .dark ::-webkit-scrollbar-track {
+            background: #374151;
         }
     </style>
 </body>
