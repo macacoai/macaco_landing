@@ -483,14 +483,16 @@
                             <div className="relative group">
                                 <div className="absolute -inset-4 bg-gradient-to-r from-primary/20 to-primary-dark/20 rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-300"></div>
                                 <div className="relative overflow-hidden rounded-2xl shadow-2xl bg-black">
-                                    <iframe
-                                        className="w-full h-64 sm:h-96 lg:h-[500px]"
-                                        src="https://www.youtube.com/embed/sample-video"
-                                        title="Macaco Demo Video"
-                                        frameBorder="0"
-                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                        allowFullScreen
-                                    ></iframe>
+                                    <video
+                                        className="w-full h-64 sm:h-96 lg:h-[500px] object-cover"
+                                        controls
+                                        preload="metadata"
+                                        poster="static/logo.png"
+                                    >
+                                        <source src="static/demo.mov" type="video/quicktime" />
+                                        <source src="static/demo.mov" type="video/mp4" />
+                                        Tu navegador no soporta el elemento video.
+                                    </video>
                                 </div>
                             </div>
                             <p className="text-center text-black/60 dark:text-white/80 mt-8 text-lg">
