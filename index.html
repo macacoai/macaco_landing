@@ -3,18 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Macaco - Your AI-powered QA assistant</title>
-    <meta name="description" content="Describe what you want to test in plain language, Macaco generates real automated tests and you run them on your machine as many times as you want. No cost per execution. No vendor lock-in.">
+    <title>Macaco - AI-Powered QA Test Automation | No Code, No Vendor Lock-in</title>
+    <meta name="description" content="Describe what you want to test in plain language. Macaco generates real Playwright automated tests you run locally, unlimited times. No cost per execution. No vendor lock-in.">
+    <meta name="keywords" content="QA automation, AI testing, Playwright, automated testing, test generation, no-code testing, QA assistant, test automation tool, software testing, regression testing">
+
+    <!-- Canonical -->
+    <link rel="canonical" href="https://macaco.ai/">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://macaco.ai/">
+    <meta property="og:title" content="Macaco - AI-Powered QA Test Automation">
+    <meta property="og:description" content="Describe what you want to test in plain language. Macaco generates real Playwright tests you run locally, unlimited times. No cost per execution.">
+    <meta property="og:image" content="https://macaco.ai/static/logo.png">
+    <meta property="og:site_name" content="Macaco">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="es_ES">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Macaco - AI-Powered QA Test Automation">
+    <meta name="twitter:description" content="Describe what you want to test in plain language. Macaco generates real Playwright tests you run locally, unlimited times.">
+    <meta name="twitter:image" content="https://macaco.ai/static/logo.png">
+
+    <!-- Preconnect hints -->
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="dns-prefetch" href="https://us.i.posthog.com">
+    <link rel="preconnect" href="https://us.i.posthog.com" crossorigin>
+
     <script src="https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.production.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.20.15/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/png" href="static/logo.png">
-    <link rel="shortcut icon" type="image/png" href="static/logo.png">
-    <link rel="apple-touch-icon" href="static/logo.png">
-    <link rel="alternate" hreflang="en" href="index.html">
-    <link rel="alternate" hreflang="es" href="index-es.html">
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/png" sizes="32x32" href="static/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="static/favicon-192.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="static/favicon-192.png">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#e6a817">
+
+    <!-- Hreflang -->
+    <link rel="alternate" hreflang="en" href="https://macaco.ai/">
+    <link rel="alternate" hreflang="es" href="https://macaco.ai/index-es.html">
+    <link rel="alternate" hreflang="x-default" href="https://macaco.ai/">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Macaco",
+        "description": "AI-powered QA assistant that generates real Playwright automated tests from plain language descriptions. Run tests locally with no cost per execution.",
+        "url": "https://macaco.ai",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Windows, macOS, Linux",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD",
+            "description": "Free Beta Access"
+        },
+        "author": {
+            "@type": "Organization",
+            "name": "Macaco",
+            "url": "https://macaco.ai"
+        },
+        "featureList": [
+            "AI-powered test generation from natural language",
+            "Real Playwright test code generation",
+            "Local test execution with no cost per run",
+            "Video recordings and screenshots of test runs",
+            "Export to your repository and CI/CD",
+            "No vendor lock-in"
+        ]
+    }
+    </script>
     <script>
         !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init Ce Os As Te Cs Fs capture Ye calculateEventProperties Ls register register_once register_for_session unregister unregister_for_session qs getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSurveysLoaded onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey canRenderSurveyAsync identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty zs js createPersonProfile Us Rs Bs opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing get_explicit_consent_status is_capturing clear_opt_in_out_capturing Ds debug L Ns getPageViewId captureTraceFeedback captureTraceMetric".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
         posthog.init('phc_p3NVEst44yGeaIPNB1FbZu5yyqC8h2FGM0VbQATzRPj', {
@@ -270,9 +338,10 @@
                                         controls
                                         preload="metadata"
                                         poster="static/logo.png"
+                                        loading="lazy"
                                     >
+                                        <source src="static/demo.mp4" type="video/mp4" />
                                         <source src="static/demo.mov" type="video/quicktime" />
-                                        <source src="static/demo.mov" type="video/mp4" />
                                         Your browser does not support the video element.
                                     </video>
                                 </div>

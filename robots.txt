@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://macaco.ai/sitemap.xml
+
+Disallow: /download.html
