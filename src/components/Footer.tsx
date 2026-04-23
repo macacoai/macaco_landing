@@ -10,7 +10,7 @@ export default function Footer() {
   const c = useCopy();
   return (
     <footer
-      className="relative text-white py-12"
+      className="relative overflow-hidden text-white py-12"
       style={{ backgroundColor: "var(--color-dark-deepest)" }}
     >
       <Image
@@ -33,7 +33,7 @@ export default function Footer() {
               height={32}
               className="rounded-lg mr-3"
             />
-            <span className="text-xl font-bold">Macaco</span>
+            <span className="macaco-wordmark" style={{ fontSize: "22px" }}>Macaco</span>
           </div>
 
           <div className="flex justify-center space-x-6">
