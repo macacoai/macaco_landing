@@ -38,7 +38,7 @@ export const COPY = {
       lead: "Describa sus casos de prueba como se los explicaría a un colega. Macaco los convierte en tests automatizados que puede ejecutar en cada sprint sin reescribir nada.",
       features: [
         {
-          title: "Tests reales, no grabaciones frágiles",
+          title: "Tests reales, no grabaciones frágiles.",
           description:
             "Código de automatización profesional con Playwright. Inspeccione, edite o exporte — el mismo código que escribiría un ingeniero de automatización senior.",
         },

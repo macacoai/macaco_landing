@@ -3,24 +3,6 @@
 import AppMockup from "./app-mockup/AppMockup";
 import { useCopy } from "@/lib/LanguageContext";
 
-const FEATURE_ICONS = [
-  (
-    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" key="icon-0">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-    </svg>
-  ),
-  (
-    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" key="icon-1">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-    </svg>
-  ),
-  (
-    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" key="icon-2">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-    </svg>
-  ),
-];
-
 export default function WhyMacaco() {
   const c = useCopy();
   return (
@@ -122,12 +104,12 @@ export default function WhyMacaco() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="px-4 sm:px-6 lg:px-8">
         <ul
-          className="list-none p-0 m-0 grid grid-cols-1 md:grid-cols-3"
-          style={{ gap: "24px", marginTop: "72px" }}
+          className="list-none p-0 m-0 mx-auto grid grid-cols-1 md:grid-cols-3"
+          style={{ gap: "24px", marginTop: "72px", maxWidth: "1280px" }}
         >
-          {c.why.features.map((f, i) => (
+          {c.why.features.map((f) => (
             <li
               key={f.title}
               style={{
@@ -137,20 +119,6 @@ export default function WhyMacaco() {
                 border: "1px solid rgba(255,255,255,0.08)",
               }}
             >
-              <div
-                className="flex items-center justify-center"
-                style={{
-                  width: "44px",
-                  height: "44px",
-                  borderRadius: "12px",
-                  background: "rgba(255,249,18,0.08)",
-                  border: "1px solid rgba(255,249,18,0.24)",
-                  color: "#FFF912",
-                  marginBottom: "18px",
-                }}
-              >
-                {FEATURE_ICONS[i]}
-              </div>
               <h3
                 className="text-white"
                 style={{
