@@ -2,15 +2,18 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useCopy } from "@/lib/LanguageContext";
 
 const LOGO_SRC = "/images/logo-20260329.png";
 
 export default function Footer() {
   const c = useCopy();
+  const pathname = usePathname();
+  const isHome = pathname === "/";
   return (
     <footer
-      className="relative overflow-hidden text-white py-12"
+      className={`relative text-white py-12 ${isHome ? "" : "overflow-hidden"}`}
       style={{ backgroundColor: "var(--color-dark-deepest)" }}
     >
       <Image

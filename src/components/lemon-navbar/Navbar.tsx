@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { MacacoLogoMark } from "./icons";
 import { cn } from "./utils";
 import { useCopy, useLanguage } from "@/lib/LanguageContext";
@@ -9,6 +10,8 @@ import { handleHashClick } from "@/lib/smoothScrollToHash";
 export default function Navbar() {
   const { lang, setLang } = useLanguage();
   const c = useCopy();
+  const pathname = usePathname();
+  const isHome = pathname === "/";
   const activeLanguage = lang === "es" ? "ES" : "EN";
 
   return (
@@ -39,8 +42,8 @@ export default function Navbar() {
       >
         {/* Logo */}
         <Link
-          href="#hero"
-          onClick={handleHashClick}
+          href={isHome ? "#hero" : "/"}
+          onClick={isHome ? handleHashClick : undefined}
           className="flex items-center gap-2.5 shrink-0"
         >
           <MacacoLogoMark size={36} />
