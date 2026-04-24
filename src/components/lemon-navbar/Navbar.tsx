@@ -63,8 +63,8 @@ export default function Navbar() {
         <ul className="hidden md:flex items-center gap-8">
           <li>
             <Link
-              href="#why-macaco"
-              onClick={handleHashClick}
+              href={isHome ? "#why-macaco" : "/#why-macaco"}
+              onClick={isHome ? handleHashClick : undefined}
               className="text-white hover:text-white/80 transition-colors"
               style={{ fontFamily: "var(--font-google-sans-flex)", fontWeight: 420, fontSize: "16px" }}
             >
@@ -73,8 +73,8 @@ export default function Navbar() {
           </li>
           <li>
             <Link
-              href="#community"
-              onClick={handleHashClick}
+              href={isHome ? "#community" : "/#community"}
+              onClick={isHome ? handleHashClick : undefined}
               className="text-white hover:text-white/80 transition-colors"
               style={{ fontFamily: "var(--font-google-sans-flex)", fontWeight: 420, fontSize: "16px" }}
             >
@@ -83,8 +83,8 @@ export default function Navbar() {
           </li>
           <li>
             <Link
-              href="#team"
-              onClick={handleHashClick}
+              href={isHome ? "#team" : "/#team"}
+              onClick={isHome ? handleHashClick : undefined}
               className="text-white hover:text-white/80 transition-colors"
               style={{ fontFamily: "var(--font-google-sans-flex)", fontWeight: 420, fontSize: "16px" }}
             >
@@ -155,8 +155,8 @@ export default function Navbar() {
           </div>
 
           <Link
-            href="#get-started"
-            onClick={handleHashClick}
+            href={isHome ? "#get-started" : "/#get-started"}
+            onClick={isHome ? handleHashClick : undefined}
             className="btn-primary flex items-center justify-center"
             style={{
               fontFamily: "var(--font-google-sans-flex)",
