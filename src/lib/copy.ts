@@ -4,6 +4,7 @@ export const COPY = {
       link: "¿Por qué elegirnos?",
       linkTeam: "Equipo",
       linkCommunity: "Comunidad",
+      web: "Abrir App Web",
       cta: "Probar Gratis",
     },
     hero: {
@@ -579,6 +580,7 @@ export const COPY = {
       link: "Why choose us?",
       linkTeam: "Team",
       linkCommunity: "Community",
+      web: "Open Web App",
       cta: "Try Free",
     },
     hero: {

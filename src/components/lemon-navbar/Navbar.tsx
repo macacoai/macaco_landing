@@ -154,6 +154,21 @@ export default function Navbar() {
             </button>
           </div>
 
+          <a
+            href="https://app.macaco.ai"
+            className="hidden sm:flex btn-glass items-center justify-center"
+            style={{
+              fontFamily: "var(--font-google-sans-flex)",
+              fontWeight: 300,
+              fontSize: "16px",
+              padding: "8px 18px",
+              borderRadius: "100px",
+              color: "rgba(255,255,255,0.82)",
+            }}
+          >
+            {c.nav.web}
+          </a>
+
           <Link
             href={isHome ? "#get-started" : "/#get-started"}
             onClick={isHome ? handleHashClick : undefined}
