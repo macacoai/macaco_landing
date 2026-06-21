@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useCopy } from "@/lib/LanguageContext";
+import { captureEvent } from "@/lib/analytics";
 import { WindowsIcon, AppleIcon, LinuxIcon } from "./icons";
 
 const RELEASES_ENDPOINT =
@@ -89,7 +90,11 @@ function PlatformCard({ Icon, platform, description, url, loading, labels }: Car
       href={url ?? undefined}
       aria-disabled={disabled || loading}
       onClick={(e) => {
-        if (!url) e.preventDefault();
+        if (!url) {
+          e.preventDefault();
+          return;
+        }
+        captureEvent("download_clicked", { platform });
       }}
       style={NAV_GLASS}
       className={`rounded-2xl p-5 flex flex-col items-center text-center transition ${
@@ -108,6 +113,10 @@ export default function DownloadClient() {
   const c = useCopy();
   const [links, setLinks] = useState<Links>(EMPTY_LINKS);
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    captureEvent("download_page_viewed");
+  }, []);
 
   useEffect(() => {
     const controller = new AbortController();
