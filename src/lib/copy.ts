@@ -116,6 +116,13 @@ export const COPY = {
           photo: "/images/team/luciano.jpg",
           linkedin: "https://www.linkedin.com/in/serra-luciano-martin/",
         },
+        {
+          name: "Imanol Urzaiz",
+          role: "CPO & Co-founder",
+          bio: "Ingeniero en software con +5 años de experiencia en desarrollo full stack y un alto enfoque en producto.",
+          photo: "/images/team/imanol.jpg",
+          linkedin: "https://www.linkedin.com/in/imanol-urzaiz/",
+        },
       ],
     },
     footer: {
@@ -691,6 +698,13 @@ export const COPY = {
           bio: "GenAI and backend specialist. Built AI chatbots serving 30K users/month at Moni. Expert in Python, Django, FastAPI, and LLM agents.",
           photo: "/images/team/luciano.jpg",
           linkedin: "https://www.linkedin.com/in/serra-luciano-martin/",
+        },
+        {
+          name: "Imanol Urzaiz",
+          role: "CPO & Co-founder",
+          bio: "Software engineer with +5 years of experience in full stack development and a strong focus on product.",
+          photo: "/images/team/imanol.jpg",
+          linkedin: "https://www.linkedin.com/in/imanol-urzaiz/",
         },
       ],
     },

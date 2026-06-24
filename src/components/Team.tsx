@@ -64,7 +64,7 @@ export default function Team() {
         </div>
 
         <div
-          className="flex flex-col sm:flex-row justify-center max-w-3xl mx-auto"
+          className="flex flex-col sm:flex-row justify-center max-w-5xl mx-auto"
           style={{ gap: "64px" }}
         >
           {c.team.members.map((member) => (
