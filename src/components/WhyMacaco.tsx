@@ -75,6 +75,7 @@ export default function WhyMacaco() {
             src="/images/macaco-4.png"
             alt=""
             aria-hidden="true"
+            className="hidden md:block"
             style={{
               position: "absolute",
               top: -243,
@@ -90,6 +91,7 @@ export default function WhyMacaco() {
             src="/images/macaco-5.png"
             alt=""
             aria-hidden="true"
+            className="hidden md:block"
             style={{
               position: "absolute",
               top: -243,

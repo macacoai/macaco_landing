@@ -49,6 +49,7 @@ export default function AppMockup() {
       ref={rootRef}
       className="relative overflow-hidden"
       style={{
+        width: "100%",
         borderRadius: 18,
         border: "1px solid rgba(255,255,255,0.12)",
         background: "#00142B",

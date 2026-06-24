@@ -54,7 +54,7 @@ export default function Hero() {
         }}
       />
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center pt-20">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center pt-20 min-w-0">
         <div className="animate-fade-in-up">
           <div
             className="inline-flex items-center mb-8"

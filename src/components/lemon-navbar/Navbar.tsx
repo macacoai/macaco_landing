@@ -46,12 +46,12 @@ export default function Navbar() {
           onClick={isHome ? handleHashClick : undefined}
           className="flex items-center gap-2.5 shrink-0"
         >
-          <MacacoLogoMark size={36} />
+          <MacacoLogoMark size={32} />
           <span
             className="text-black"
             style={{
                 fontFamily: "var(--font-audiowide)",
-                fontSize: "22px",
+                fontSize: "clamp(16px, 4.5vw, 22px)",
                 fontWeight: 400,
                 color: "#fff912",
           }}
@@ -94,12 +94,11 @@ export default function Navbar() {
         </ul>
 
         {/* Right actions */}
-        <div className="flex items-center gap-3 shrink-0">
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           <div
-            className="hidden md:flex relative items-center p-1"
+            className="flex relative items-center p-1 shrink-0 w-[64px] md:w-[92px]"
             style={{
               height: "36px",
-              width: "92px",
               borderRadius: "999px",
               backgroundColor: "rgba(255, 255, 255, 0.04)",
               border: "1px solid rgba(255, 255, 255, 0.14)",
@@ -127,7 +126,7 @@ export default function Navbar() {
               style={{
                 fontFamily: "var(--font-google-sans-flex)",
                 fontWeight: 500,
-                fontSize: "12px",
+                fontSize: "11px",
                 letterSpacing: "0.03em",
                 color: activeLanguage === "ES" ? "#ffffff" : "rgba(255, 255, 255, 0.48)",
                 transition: "color 220ms ease, transform 220ms ease",
@@ -143,7 +142,7 @@ export default function Navbar() {
               style={{
                 fontFamily: "var(--font-google-sans-flex)",
                 fontWeight: 500,
-                fontSize: "12px",
+                fontSize: "11px",
                 letterSpacing: "0.03em",
                 color: activeLanguage === "EN" ? "#ffffff" : "rgba(255, 255, 255, 0.48)",
                 transition: "color 220ms ease, transform 220ms ease",
@@ -172,12 +171,10 @@ export default function Navbar() {
           <Link
             href={isHome ? "#get-started" : "/#get-started"}
             onClick={isHome ? handleHashClick : undefined}
-            className="btn-primary flex items-center justify-center"
+            className="btn-primary flex items-center justify-center px-3.5 py-2 text-[14px] sm:px-5 sm:text-[18px]"
             style={{
               fontFamily: "var(--font-google-sans-flex)",
               fontWeight: 300,
-              fontSize: "18px",
-              padding: "8px 20px",
               borderRadius: "100px",
             }}
           >
